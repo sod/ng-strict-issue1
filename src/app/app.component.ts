@@ -8,7 +8,8 @@ interface Feature {
 @Component({
   selector: 'app-root',
   template: `
-    {{ foo?.bar.includes('baz') }}
+    // angular strictTemplates assumes "lorem" may be undefined, even though it's guaranteed by the interface
+    {{ feature?.lorem.includes('a') }}
   `,
   styles: []
 })
@@ -19,9 +20,14 @@ export class AppComponent {
       ipsum: ['a'],
     },
     b: {
-      lorem: ['b'],
-      ipsum: ['b'],
+      lorem: ['b', 'c'],
+      ipsum: ['a', 'b', 'c'],
     }
   }
   feature: Feature | undefined = this.features.a;
+
+  constructor() {
+    // typescript understands that ipsum is guaranteed as of interface "Feature"
+    this.feature?.ipsum.includes('a')
+  }
 }
